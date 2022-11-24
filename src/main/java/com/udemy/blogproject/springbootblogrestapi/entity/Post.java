@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -23,5 +25,8 @@ public class Post {
     private String description;
     @Column(nullable = false, length = 250)
     private String content;
+
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // mapped by post, all operations are affected by parent into child because of CascadeType.ALL
+   private Set<Comment>comments= new HashSet<>();  // no duplicate values in Set interface
 
 }
