@@ -8,6 +8,7 @@ import com.udemy.blogproject.springbootblogrestapi.payload.CommentDto;
 import com.udemy.blogproject.springbootblogrestapi.repository.CommentRepository;
 import com.udemy.blogproject.springbootblogrestapi.repository.PostRepository;
 import com.udemy.blogproject.springbootblogrestapi.service.CommentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ModelMapper mapper;
 
     @Override
     public CommentDto createComment(long postId, CommentDto commentDto) {
@@ -91,19 +95,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private CommentDto mapToDto(Comment comment){
-        CommentDto commentDto= new CommentDto();
-        commentDto.setId(comment.getId());
-        commentDto.setName(comment.getName());
-        commentDto.setEmail(comment.getEmail());
-        commentDto.setBody(comment.getBody());
+        CommentDto commentDto= mapper.map(comment, CommentDto.class);
         return commentDto;
     }
-    private Comment mapToEntity(CommentDto commentdto){
-        Comment comment= new Comment();
-        comment.setId(commentdto.getId());
-        comment.setName(commentdto.getName());
-        comment.setEmail(commentdto.getEmail());
-        comment.setBody(commentdto.getBody());
+    private Comment mapToEntity(CommentDto commentDto){
+       Comment comment= mapper.map(commentDto, Comment.class);
         return comment;
     }
 

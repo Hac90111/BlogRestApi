@@ -6,6 +6,7 @@ import com.udemy.blogproject.springbootblogrestapi.payload.PostDto;
 import com.udemy.blogproject.springbootblogrestapi.payload.PostResponse;
 import com.udemy.blogproject.springbootblogrestapi.repository.PostRepository;
 import com.udemy.blogproject.springbootblogrestapi.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private ModelMapper mapper;
+
     @Override
     public PostDto createPost(PostDto postDto) {
         //convert Dto into entity
@@ -83,20 +87,23 @@ public class PostServiceImpl implements PostService {
 
     //covert entity into dto
     private PostDto mapToDto(Post post){
-        PostDto postDto= new PostDto();
-        postDto.setId(post.getId());
-        postDto.setTitle(post.getTitle());
-        postDto.setContent(post.getContent());
-        postDto.setDescription(post.getDescription());
+        PostDto postDto= mapper.map(post, PostDto.class);
+//        PostDto postDto= new PostDto();
+//        postDto.setId(post.getId());
+//        postDto.setTitle(post.getTitle());
+//        postDto.setContent(post.getContent());
+//        postDto.setDescription(post.getDescription());
         return postDto;
     }
 
     //convert dto into entity
     private Post mapToEntity(PostDto postDto){
-        Post post= new Post();
-        post.setTitle(postDto.getTitle());
-        post.setDescription(postDto.getDescription());
-        post.setContent(postDto.getContent());
+
+        Post post= mapper.map(postDto, Post.class);
+//        Post post= new Post();
+//        post.setTitle(postDto.getTitle());
+//        post.setDescription(postDto.getDescription());
+//        post.setContent(postDto.getContent());
         return post;
     }
 
