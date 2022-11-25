@@ -18,11 +18,11 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String title;
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String description;
-    @Column(nullable = false, length = 250)
+    @Column(nullable = false)
     private String content;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // mapped by post, all operations are affected by parent into child because of CascadeType.ALL
