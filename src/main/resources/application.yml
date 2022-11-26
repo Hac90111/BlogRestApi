@@ -1,0 +1,27 @@
+server:
+  port: 4041
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/myblog
+    username: root
+    password: h20.08.1996H
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  security:
+    user:
+      name: himanshu
+      password: password
+      roles: ADMIN
+
+logging:
+  level:
+    web: debug
+
+## App Properties(JWT)
+app:
+  jwt-secret:JWTSecretKey
+  jwt-expiration-milliseconds:604800000
