@@ -23,14 +23,14 @@ public class PostController {
 
     // create blog post
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("v1/posts")
+    @PostMapping(value = "v1/posts")
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto){
         PostDto post = postService.createPost(postDto);
         return new ResponseEntity<>(post, HttpStatus.CREATED);
     }
 
     //get all post
-    @GetMapping("v1/posts")
+    @GetMapping(value = "v1/posts")
     public PostResponse getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
@@ -41,12 +41,12 @@ public class PostController {
     }
 
     // get post by id
-    @GetMapping("v1/posts/{id}")
+    @GetMapping(value = "/posts/{id}", params = "version=1")
     public ResponseEntity<PostDto> getPostByIdV1(@PathVariable("id") long id){
      return   ResponseEntity.ok(postService.getPostById(id));
     }
 
-    @GetMapping("v2/posts/{id}")
+    @GetMapping(value = "/posts/{id}",params = "version=2")
     public ResponseEntity<PostDto2> getPostByIdV2(@PathVariable("id") long id){
         PostDto postDto= postService.getPostById(id);
         PostDto2 postDto2= new PostDto2();
@@ -63,7 +63,7 @@ public class PostController {
 
     //update post by id
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("v1/posts/update/{id}")
+    @PutMapping(value = "v1/posts/update/{id}")
     public ResponseEntity<PostDto> updatePost(@Valid  @RequestBody PostDto postDto,@PathVariable("id") long id){
        PostDto postResponse= postService.updatePost(postDto, id);
        return new ResponseEntity<>(postResponse, HttpStatus.OK);
