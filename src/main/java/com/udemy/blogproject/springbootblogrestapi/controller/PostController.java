@@ -41,12 +41,12 @@ public class PostController {
     }
 
     // get post by id
-    @GetMapping(value = "/posts/{id}", headers = "X-API-VERSION=1")
+    @GetMapping(value = "/posts/{id}",produces = "application/vnd.udemy.v1+json")
     public ResponseEntity<PostDto> getPostByIdV1(@PathVariable("id") long id){
      return   ResponseEntity.ok(postService.getPostById(id));
     }
 
-    @GetMapping(value = "/posts/{id}",headers = "X-API-VERSION=2")
+    @GetMapping(value = "/posts/{id}",produces = "application/vnd.udemy.v2+json")
     public ResponseEntity<PostDto2> getPostByIdV2(@PathVariable("id") long id){
         PostDto postDto= postService.getPostById(id);
         PostDto2 postDto2= new PostDto2();
