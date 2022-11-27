@@ -2,6 +2,7 @@ package com.udemy.blogproject.springbootblogrestapi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //inject required dependencies
     @Autowired
     private JwtTokenProvider tokenProvider;
+
+
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Override
@@ -47,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Bearer <accessToken>
     private String getJwtTokenFromRequest(HttpServletRequest request){
-        String bearerToken =request.getHeader("Authorization");
+        String bearerToken =request.getHeader("${jwt.header}");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
             return  bearerToken.substring(7);
         }

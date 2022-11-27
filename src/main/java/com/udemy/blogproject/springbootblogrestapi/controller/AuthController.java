@@ -2,17 +2,18 @@ package com.udemy.blogproject.springbootblogrestapi.controller;
 
 import com.udemy.blogproject.springbootblogrestapi.entity.Role;
 import com.udemy.blogproject.springbootblogrestapi.entity.User;
+import com.udemy.blogproject.springbootblogrestapi.payload.JwtAuthResponseDto;
 import com.udemy.blogproject.springbootblogrestapi.payload.LoginDto;
 import com.udemy.blogproject.springbootblogrestapi.payload.SignupDto;
 import com.udemy.blogproject.springbootblogrestapi.repository.RoleRepository;
 import com.udemy.blogproject.springbootblogrestapi.repository.UserRepository;
+import com.udemy.blogproject.springbootblogrestapi.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,13 +38,19 @@ public class AuthController {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
 
     //signin api
     @PostMapping("/signin")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
+    public ResponseEntity<JwtAuthResponseDto> authenticateUser(@RequestBody LoginDto loginDto){
       Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsernameOrEmail(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User has been authenticated", HttpStatus.OK);
+
+        // get token from tokenProvider Class
+        String token= tokenProvider.generateToken(authentication);
+        return  ResponseEntity.ok(new JwtAuthResponseDto(token));
     }
 
     //signup api
