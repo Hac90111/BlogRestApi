@@ -41,12 +41,12 @@ public class PostController {
     }
 
     // get post by id
-    @GetMapping(value = "/posts/{id}", params = "version=1")
+    @GetMapping(value = "/posts/{id}", headers = "X-API-VERSION=1")
     public ResponseEntity<PostDto> getPostByIdV1(@PathVariable("id") long id){
      return   ResponseEntity.ok(postService.getPostById(id));
     }
 
-    @GetMapping(value = "/posts/{id}",params = "version=2")
+    @GetMapping(value = "/posts/{id}",headers = "X-API-VERSION=2")
     public ResponseEntity<PostDto2> getPostByIdV2(@PathVariable("id") long id){
         PostDto postDto= postService.getPostById(id);
         PostDto2 postDto2= new PostDto2();
@@ -58,6 +58,7 @@ public class PostController {
         tags.add("Java");
         tags.add("SpringBoot");
         tags.add("AWS");
+        postDto2.setTags(tags);
         return   ResponseEntity.ok(postDto2);
     }
 
