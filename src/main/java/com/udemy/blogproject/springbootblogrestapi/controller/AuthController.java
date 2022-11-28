@@ -8,6 +8,8 @@ import com.udemy.blogproject.springbootblogrestapi.payload.SignupDto;
 import com.udemy.blogproject.springbootblogrestapi.repository.RoleRepository;
 import com.udemy.blogproject.springbootblogrestapi.repository.UserRepository;
 import com.udemy.blogproject.springbootblogrestapi.security.JwtTokenProvider;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 
+@Api(value = "Auth controller exposes singUp and signIn REST APIs")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -43,6 +46,7 @@ public class AuthController {
 
 
     //signin api
+    @ApiOperation(value = "REST API to signIn/logIn user to Blog app")
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthResponseDto> authenticateUser(@RequestBody LoginDto loginDto){
       Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsernameOrEmail(), loginDto.getPassword()));
@@ -56,6 +60,7 @@ public class AuthController {
     //signup api
 
     @PostMapping("/signup")
+    @ApiOperation(value = "REST API to register/signup user to Blog app")
     public ResponseEntity<?> registerUser(@RequestBody SignupDto signupDto){
         // add check for username exists in DB
         if (userRepository.existsByUserName(signupDto.getUsername())){
