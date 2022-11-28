@@ -1,7 +1,6 @@
 package com.udemy.blogproject.springbootblogrestapi.controller;
 
 import com.udemy.blogproject.springbootblogrestapi.payload.PostDto;
-import com.udemy.blogproject.springbootblogrestapi.payload.PostDto2;
 import com.udemy.blogproject.springbootblogrestapi.payload.PostResponse;
 import com.udemy.blogproject.springbootblogrestapi.service.PostService;
 import com.udemy.blogproject.springbootblogrestapi.utils.AppConstants;
@@ -12,8 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -41,37 +38,22 @@ public class PostController {
     }
 
     // get post by id
-    @GetMapping(value = "/posts/{id}",produces = "application/vnd.udemy.v1+json")
+    @GetMapping(value = "v1/posts/{id}")
     public ResponseEntity<PostDto> getPostByIdV1(@PathVariable("id") long id){
      return   ResponseEntity.ok(postService.getPostById(id));
     }
 
-    @GetMapping(value = "/posts/{id}",produces = "application/vnd.udemy.v2+json")
-    public ResponseEntity<PostDto2> getPostByIdV2(@PathVariable("id") long id){
-        PostDto postDto= postService.getPostById(id);
-        PostDto2 postDto2= new PostDto2();
-        postDto2.setId(postDto.getId());
-        postDto2.setTitle(postDto.getTitle());
-        postDto2.setDescription(postDto.getDescription());
-        postDto2.setContent(postDto.getContent());
-        List<String> tags= new ArrayList<>();
-        tags.add("Java");
-        tags.add("SpringBoot");
-        tags.add("AWS");
-        postDto2.setTags(tags);
-        return   ResponseEntity.ok(postDto2);
-    }
 
     //update post by id
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = "v1/posts/update/{id}")
+    @PutMapping(value = "v1/posts/{id}")
     public ResponseEntity<PostDto> updatePost(@Valid  @RequestBody PostDto postDto,@PathVariable("id") long id){
        PostDto postResponse= postService.updatePost(postDto, id);
        return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("v1/posts/delete/{id}")
+    @DeleteMapping("v1/posts/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") long id){
         postService.deletePostById(id);
         return new ResponseEntity<>("Post has been deleted", HttpStatus.OK);

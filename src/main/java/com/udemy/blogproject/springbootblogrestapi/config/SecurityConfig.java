@@ -8,24 +8,34 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.Filter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
+@EnableWebMvc
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) // to provide method level security
 public class SecurityConfig {
+
+    public static final String[] PUBLIC_URLS={
+            "/api/v1/**",
+            "/api/v1/auth/**",
+            "/v3/api-docs",
+            "/v2/api-docs",
+            "/swagger-ui",
+            "/swagger-resources/**",
+            "/swagger-ui.html/**",
+            "/webjars/**"
+    };
+
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Autowired
@@ -48,18 +58,12 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests((authorize)->authorize.antMatchers(
-                        HttpMethod.GET,"/api/**").permitAll()
-                        .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                        .antMatchers("/api/v1/auth/**").permitAll()
-                        .antMatchers("/v2/api-docs/**").permitAll()
-                        .antMatchers("/swagger-ui/**").permitAll()
-                        .antMatchers("/swagger-resources/**").permitAll()
-                        .antMatchers("/swagger-ui.html").permitAll()
-                        .antMatchers("/webjars/**").permitAll()
-                        .anyRequest()
-                        .authenticated()
-                );
+                .authorizeRequests()
+                .antMatchers(PUBLIC_URLS).permitAll()
+                .antMatchers(HttpMethod.GET).permitAll()
+                .anyRequest()
+                .authenticated();
+
         http.addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
